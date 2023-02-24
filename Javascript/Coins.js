@@ -35,7 +35,7 @@ function preload() {
 function create(){
     let bg = this.add.sprite(0,0,'background')
     bg.setOrigin(0,0)
-    let duck = this.add.sprite(0,0,'Player')
+    let duck = this.add.sprite(1214/2,800/2,'Player')
     console.log(this.physics)
 
     let ycordbread = Phaser.Math.Between(50,500)
@@ -54,9 +54,8 @@ function create(){
     //Changing this changes how long until the coins spawn
     setInterval(coinRandom,15000)
     duck.setScale(0.2,0.2)
-    duck.setOrigin(0,0)
-    duck.displayWidth = 100
-    duck.displayHeight = 100
+    duck.displayWidth = 80
+    duck.displayHeight = 80
     
 }
 //Function to control the coins spawning at random
