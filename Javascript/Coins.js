@@ -2,7 +2,7 @@ let gameScene = new Phaser.Scene('Game')
 
 
 
-let coinsSpawn = 15
+let coinsSpawn = 5
 let coinArray = []
 let score = 0
 let scoreText
@@ -46,7 +46,8 @@ function create(){
 
     // Add score text
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: 'white' })
-
+    
+    //Bread random coords
     let ycordbread = Phaser.Math.Between(50,500)
     let xcordbread = Phaser.Math.Between(50,800)
     let bread = this.add.sprite(xcordbread,ycordbread,'Bread')
@@ -86,22 +87,14 @@ function collectCoin(duck, coin) {
     scoreText.setText('score: ' + score);
 }
 //Function to control the coins spawning at random
-function coinRandom() {
-    for(let i = 0;i<coinArray.length;i++) {
-        let ycordcoins = Phaser.Math.Between(50,500)
-        let xcordcoins = Phaser.Math.Between(50,800)
-        coin.x = xcordcoins
-        coin.y = ycordcoins
-        console.log(coinArray[i])
-    }
-}
-
-function randomSpawnX() {   
-    return Phaser.Math.Between(50,500)
-}
-
-function randomSpawnY() {
-    return Phaser.Math.Between(50,400)
-}
+// function coinRandom() {
+//     for(let i = 0;i<coinArray.length;i++) {
+//         let ycordcoins = Phaser.Math.Between(50,500)
+//         let xcordcoins = Phaser.Math.Between(50,800)
+//         coin.x = xcordcoins
+//         coin.y = ycordcoins
+//         console.log(coinArray[i])
+//     }
+// }
 
 function update() {}
