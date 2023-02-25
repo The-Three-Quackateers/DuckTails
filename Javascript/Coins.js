@@ -55,25 +55,25 @@ function create() {
   duck = this.physics.add.sprite(1134, 731, "Player");
   //Duck Animations
   duck.anims.create({
-    key: "duck_anim_right",
+    key: "duck_idle_right",
     frames: this.anims.generateFrameNumbers("Player", { start: 12, end: 15 }),
     frameRate: 3,
     repeat: -1,
   });
   duck.anims.create({
-    key: "duck_anim_left",
+    key: "duck_idle_left",
     frames: this.anims.generateFrameNumbers("Player", { start: 8, end: 11 }),
     frameRate: 3,
     repeat: -1,
   });
   duck.anims.create({
-    key: "duck_anim_down",
+    key: "duck_idle_down",
     frames: this.anims.generateFrameNumbers("Player", { start: 0, end: 3 }),
     frameRate: 3,
     repeat: -1,
   });
   duck.anims.create({
-    key: "duck_anim_up",
+    key: "duck_idle_up",
     frames: this.anims.generateFrameNumbers("Player", { start: 4, end: 7 }),
     frameRate: 3,
     repeat: -1,
@@ -113,7 +113,7 @@ function create() {
   });
   //End of duck animations
 
-  duck.anims.play('duck_anim_down')
+  duck.anims.play('duck_idle_down')
 
   //Duck Scale and height
   duck.setScale(0.2, 0.2);
@@ -222,13 +222,13 @@ function update() {
     duck.setVelocityY(100);
   } else {
     if (lastDirection === "LEFT") {
-      duck.anims.play("duck_anim_left", true);
+      duck.anims.play("duck_idle_left", true);
     } else if (lastDirection === "RIGHT") {
-      duck.anims.play("duck_anim_right", true);
+      duck.anims.play("duck_idle_right", true);
     } else if (lastDirection === "DOWN") {
-      duck.anims.play("duck_anim_down", true);
+      duck.anims.play("duck_idle_down", true);
     } else if (lastDirection === "UP") {
-      duck.anims.play("duck_anim_up", true);
+      duck.anims.play("duck_idle_up", true);
     }
   }
 }
