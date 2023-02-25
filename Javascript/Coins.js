@@ -50,12 +50,12 @@ function create(){
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: 'white' })
     
     //Bread random coords and creates multtiple breads
-    for(let i = 0; i < breadSpawn; i++){
-    let ycordbread = Phaser.Math.Between(50,500)
-    let xcordbread = Phaser.Math.Between(50,800)
-    let bread = this.add.sprite(xcordbread,ycordbread,'Bread')
-    bread.setScale(0.5)
-    }
+    // for(let i = 0; i < breadSpawn; i++){
+    // let ycordbread = Phaser.Math.Between(50,500)
+    // let xcordbread = Phaser.Math.Between(50,800)
+    // let bread = this.add.sprite(xcordbread,ycordbread,'Bread')
+    // bread.setScale(0.5)
+    // }
     // Add the coins group and enable physics for each coin
     
     let coins = this.physics.add.group({
@@ -64,9 +64,17 @@ function create(){
     });
     let breads = this.physics.add.group({
         key: 'Bread',
+        repeat:breadSpawn-1
     });
     duck.setCollideWorldBounds(true)
-    
+    breads.children.each(function(coin) {
+        coin.setScale(0.28)
+        setInterval(function(){
+            let x = Phaser.Math.Between(50,1214)
+            let y = Phaser.Math.Between(50,800)
+            coin.setPosition(x,y)
+        },1000)
+    },this);
     // Set scale of the coins group
     coins.children.each(function(coin) {
         coin.setScale(0.28)
@@ -81,7 +89,7 @@ function create(){
     this.physics.add.overlap(duck, coins, collectCoin, null, this);
 
     //Changing this changes how long until the coins spawn
-    
+    this.physics.add.overlap(duck, breads, gameOver, null, this)
 }
 
 function collectCoin(duck, coin) {
@@ -91,6 +99,10 @@ function collectCoin(duck, coin) {
     // Update the score
     score += 10;
     scoreText.setText('score: ' + score);
+}
+
+function gameOver(duck,  bread){
+    alert('Game Over')
 }
 //Function to control the coins spawning at random
 // function coinRandom() {
