@@ -6,7 +6,7 @@ let score = 0;
 let scoreText;
 let breadSpawn = 7;
 let breadArray = [];
-let total = coinsSpawn * 10
+let total = coinsSpawn * 10;
 
 let config = {
   type: Phaser.AUTO,
@@ -27,20 +27,24 @@ let config = {
 
 let game = new Phaser.Game(config);
 let duck;
-let coinSound 
-let lastDirection
+let coinSound;
+let lastDirection;
 function preload() {
   this.load.image("Bread", "images/Bread.png");
   this.load.image("Coins", "images/Coins.png");
-  this.load.spritesheet("Player", "images/idleAnimation.png",{
-    frameWidth:24,
-    frameHeight:24
-  })
+  this.load.spritesheet("Player", "images/idleAnimation.png", {
+    frameWidth: 24,
+    frameHeight: 24,
+  });
+  this.load.spritesheet("Player_Run", "images/runAnimation.png", {
+    frameWidth: 24,
+    frameHeight: 24,
+  });
   this.load.image(
     "background",
     "images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp"
   );
-  this.load.audio('coincollect', 'sounds/mixkit-arcade-game-jump-coin-216.wav')
+  this.load.audio("coincollect", "sounds/mixkit-arcade-game-jump-coin-216.wav");
 }
 
 function create() {
@@ -49,6 +53,7 @@ function create() {
 
   // Add the duck sprite and enable physics
   duck = this.physics.add.sprite(1134, 731, "Player");
+  //Duck Animations
   duck.anims.create({
     key: "duck_anim_right",
     frames: this.anims.generateFrameNumbers("Player", { start: 12, end: 15 }),
@@ -73,6 +78,44 @@ function create() {
     frameRate: 3,
     repeat: -1,
   });
+  duck.anims.create({
+    key: "duck_run_right",
+    frames: this.anims.generateFrameNumbers("Player_Run", {
+      start: 18,
+      end: 23,
+    }),
+    frameRate: 5,
+    repeat: -1,
+  });
+  duck.anims.create({
+    key: "duck_run_left",
+    frames: this.anims.generateFrameNumbers("Player_Run", {
+      start: 12,
+      end: 17,
+    }),
+    frameRate: 5,
+    repeat: -1,
+  });
+  duck.anims.create({
+    key: "duck_run_down",
+    frames: this.anims.generateFrameNumbers("Player_Run", { start: 0, end: 5 }),
+    frameRate: 5,
+    repeat: -1,
+  });
+  duck.anims.create({
+    key: "duck_run_up",
+    frames: this.anims.generateFrameNumbers("Player_Run", {
+      start: 6,
+      end: 11,
+    }),
+    frameRate: 5,
+    repeat: -1,
+  });
+  //End of duck animations
+
+  duck.anims.play('duck_anim_down')
+
+  //Duck Scale and height
   duck.setScale(0.2, 0.2);
   duck.displayWidth = 80;
   duck.displayHeight = 80;
@@ -83,20 +126,15 @@ function create() {
     fill: "white",
   });
 
- coinSound = this.sound.add('coincollect', {loop: false})
-  //Bread random coords and creates multtiple breads
-  // for(let i = 0; i < breadSpawn; i++){
-  // let ycordbread = Phaser.Math.Between(50,500)
-  // let xcordbread = Phaser.Math.Between(50,800)
-  // let bread = this.add.sprite(xcordbread,ycordbread,'Bread')
-  // bread.setScale(0.5)
-  // }
-  // Add the coins group and enable physics for each coin
+  //Coin sound effect
+  coinSound = this.sound.add("coincollect", { loop: false });
 
+  //Coin physics (Collide)
   let coins = this.physics.add.group({
     key: "Coins",
     repeat: coinsSpawn - 1,
   });
+  //Bread physics (Collide)
   let breads = this.physics.add.group({
     key: "Bread",
     repeat: breadSpawn - 1,
@@ -131,39 +169,30 @@ function create() {
   console.log(this.cursors);
 }
 
+//Oncollision coin collect function
 function collectCoin(duck, coin) {
   // Destroy the coin sprite
   coin.destroy();
-coinSound.play()
+  coinSound.play();
   // Update the score
   score += 10;
   scoreText.setText("score: " + score);
-  if(total === score) {
-    alert('you Wins')
+  if (total === score) {
+    alert("you Wins");
   }
 }
-
+//Game over function
 function gameOver(duck, bread) {
-  alert('Game Over')
+  alert("Game Over");
 }
-//Function to control the coins spawning at random
-// function coinRandom() {
-//     for(let i = 0;i<coinArray.length;i++) {
-//         let ycordcoins = Phaser.Math.Between(50,500)
-//         let xcordcoins = Phaser.Math.Between(50,800)
-//         coin.x = xcordcoins
-//         coin.y = ycordcoins
-//         console.log(coinArray[i])
-//     }
-// }
 
+//Movement keys update
 function update() {
-
   duck.setVelocity(0);
 
   if (this.cursors.left.isDown) {
-    duck.anims.play('duck_anim_left',true);
-    lastDirection = 'LEFT'
+    duck.anims.play("duck_run_left", true);
+    lastDirection = "LEFT";
     if (this.cursors.up.isDown) {
       duck.setVelocityX(-100);
       duck.setVelocityY(-100);
@@ -173,8 +202,8 @@ function update() {
     }
     duck.setVelocityX(-100);
   } else if (this.cursors.right.isDown) {
-    duck.anims.play('duck_anim_right',true)
-    lastDirection = 'RIGHT'
+    duck.anims.play("duck_run_right", true);
+    lastDirection = "RIGHT";
     if (this.cursors.up.isDown) {
       duck.setVelocityX(100);
       duck.setVelocityY(-100);
@@ -184,25 +213,22 @@ function update() {
     }
     duck.setVelocityX(100);
   } else if (this.cursors.up.isDown) {
-    duck.anims.play('duck_anim_up',true)
-    lastDirection = 'UP'
+    duck.anims.play("duck_run_up", true);
+    lastDirection = "UP";
     duck.setVelocityY(-100);
   } else if (this.cursors.down.isDown) {
-    duck.anims.play('duck_anim_down',true)
-    lastDirection = 'DOWN'
+    duck.anims.play("duck_run_down", true);
+    lastDirection = "DOWN";
     duck.setVelocityY(100);
   } else {
-    if (lastDirection === 'LEFT') {
-      duck.anims.play('duck_anim_left', true);
-    } else if (lastDirection === 'RIGHT') {
-      duck.anims.play('duck_anim_right', true);
-    }
-    else if (lastDirection === 'DOWN') {
-      duck.anims.play('duck_anim_down', true);
-    }
-    else if (lastDirection === 'RIGHT') {
-      duck.anims.play('duck_anim_up', true);
+    if (lastDirection === "LEFT") {
+      duck.anims.play("duck_anim_left", true);
+    } else if (lastDirection === "RIGHT") {
+      duck.anims.play("duck_anim_right", true);
+    } else if (lastDirection === "DOWN") {
+      duck.anims.play("duck_anim_down", true);
+    } else if (lastDirection === "UP") {
+      duck.anims.play("duck_anim_up", true);
     }
   }
-
 }
