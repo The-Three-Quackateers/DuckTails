@@ -6,6 +6,7 @@ let score = 0;
 let scoreText;
 let breadSpawn = 7;
 let breadArray = [];
+let total = coinsSpawn * 10
 
 let config = {
   type: Phaser.AUTO,
@@ -19,13 +20,14 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
 
 let game = new Phaser.Game(config);
 let duck;
+let coinSound 
 function preload() {
   this.load.image("Bread", "images/Bread.png");
   this.load.image("Coins", "images/Coins.png");
@@ -34,6 +36,7 @@ function preload() {
     "background",
     "images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp"
   );
+  this.load.audio('coincollect', 'sounds/mixkit-arcade-game-jump-coin-216.wav')
 }
 
 function create() {
@@ -41,7 +44,7 @@ function create() {
   bg.setOrigin(0, 0);
 
   // Add the duck sprite and enable physics
-  duck = this.physics.add.sprite(1214 / 2, 800 / 2, "Player");
+  duck = this.physics.add.sprite(1134, 731, "Player");
   duck.setScale(0.2, 0.2);
   duck.displayWidth = 80;
   duck.displayHeight = 80;
@@ -52,6 +55,7 @@ function create() {
     fill: "white",
   });
 
+ coinSound = this.sound.add('coincollect', {loop: false})
   //Bread random coords and creates multtiple breads
   // for(let i = 0; i < breadSpawn; i++){
   // let ycordbread = Phaser.Math.Between(50,500)
@@ -78,13 +82,13 @@ function create() {
   }, this);
   // Set scale of the coins group
   coins.children.each(function (coin) {
-    let x = Phaser.Math.Between(50, 1214);
-    let y = Phaser.Math.Between(50, 800);
+    let x = Phaser.Math.Between(50, 1110);
+    let y = Phaser.Math.Between(50, 700);
     coin.setPosition(x, y);
     coin.setScale(0.28);
     setInterval(function () {
-      let x = Phaser.Math.Between(50, 1214);
-      let y = Phaser.Math.Between(50, 800);
+      let x = Phaser.Math.Between(50, 1110);
+      let y = Phaser.Math.Between(50, 700);
       coin.setPosition(x, y);
     }, 10000);
   }, this);
@@ -102,14 +106,17 @@ function create() {
 function collectCoin(duck, coin) {
   // Destroy the coin sprite
   coin.destroy();
-
+coinSound.play()
   // Update the score
   score += 10;
   scoreText.setText("score: " + score);
+  if(total === score) {
+    alert('you Wins')
+  }
 }
 
 function gameOver(duck, bread) {
-  // alert('Game Over')
+  alert('Game Over')
 }
 //Function to control the coins spawning at random
 // function coinRandom() {
