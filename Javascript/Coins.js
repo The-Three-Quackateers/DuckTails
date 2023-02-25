@@ -28,10 +28,14 @@ let config = {
 let game = new Phaser.Game(config);
 let duck;
 let coinSound 
+let lastDirection
 function preload() {
   this.load.image("Bread", "images/Bread.png");
   this.load.image("Coins", "images/Coins.png");
-  this.load.image("Player", "images/Duck.png");
+  this.load.spritesheet("Player", "images/idleAnimation.png",{
+    frameWidth:24,
+    frameHeight:24
+  })
   this.load.image(
     "background",
     "images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp"
@@ -45,6 +49,30 @@ function create() {
 
   // Add the duck sprite and enable physics
   duck = this.physics.add.sprite(1134, 731, "Player");
+  duck.anims.create({
+    key: "duck_anim_right",
+    frames: this.anims.generateFrameNumbers("Player", { start: 12, end: 15 }),
+    frameRate: 3,
+    repeat: -1,
+  });
+  duck.anims.create({
+    key: "duck_anim_left",
+    frames: this.anims.generateFrameNumbers("Player", { start: 8, end: 11 }),
+    frameRate: 3,
+    repeat: -1,
+  });
+  duck.anims.create({
+    key: "duck_anim_down",
+    frames: this.anims.generateFrameNumbers("Player", { start: 0, end: 3 }),
+    frameRate: 3,
+    repeat: -1,
+  });
+  duck.anims.create({
+    key: "duck_anim_up",
+    frames: this.anims.generateFrameNumbers("Player", { start: 4, end: 7 }),
+    frameRate: 3,
+    repeat: -1,
+  });
   duck.setScale(0.2, 0.2);
   duck.displayWidth = 80;
   duck.displayHeight = 80;
@@ -76,8 +104,8 @@ function create() {
   duck.setCollideWorldBounds(true);
   breads.children.each(function (bread) {
     bread.setScale(0.28);
-    let x = Phaser.Math.Between(50, 1214);
-    let y = Phaser.Math.Between(50, 800);
+    let x = Phaser.Math.Between(50, 1100);
+    let y = Phaser.Math.Between(50, 700);
     bread.setPosition(x, y);
   }, this);
   // Set scale of the coins group
@@ -130,22 +158,12 @@ function gameOver(duck, bread) {
 // }
 
 function update() {
-  // addEventListener("keydown", function(e){
-  //     if (e.code == 'KeyD') duck.x += 0.2;
-  //     if (e.code == 'KeyA') duck.x -= 0.2;
-  //     if (e.code == 'KeyS') duck.y -= 0.2;
-  //     if (e.code == 'KeyW') duck.y  += 0.2;
-  // })
 
-  // addEventListener("keyup", function(e){
-  //     if (e.code == 'keyD') duck.x  = 0;
-  //     if (e.code == 'keyA') duck.x = 0;
-  //     if (e.code == 'KeyS') duck.y = 0;
-  //     if (e.code == 'KeyW') duck.y = 0;
-  // })
   duck.setVelocity(0);
 
   if (this.cursors.left.isDown) {
+    duck.anims.play('duck_anim_left',true);
+    lastDirection = 'LEFT'
     if (this.cursors.up.isDown) {
       duck.setVelocityX(-100);
       duck.setVelocityY(-100);
@@ -155,6 +173,8 @@ function update() {
     }
     duck.setVelocityX(-100);
   } else if (this.cursors.right.isDown) {
+    duck.anims.play('duck_anim_right',true)
+    lastDirection = 'RIGHT'
     if (this.cursors.up.isDown) {
       duck.setVelocityX(100);
       duck.setVelocityY(-100);
@@ -164,8 +184,25 @@ function update() {
     }
     duck.setVelocityX(100);
   } else if (this.cursors.up.isDown) {
+    duck.anims.play('duck_anim_up',true)
+    lastDirection = 'UP'
     duck.setVelocityY(-100);
   } else if (this.cursors.down.isDown) {
+    duck.anims.play('duck_anim_down',true)
+    lastDirection = 'DOWN'
     duck.setVelocityY(100);
+  } else {
+    if (lastDirection === 'LEFT') {
+      duck.anims.play('duck_anim_left', true);
+    } else if (lastDirection === 'RIGHT') {
+      duck.anims.play('duck_anim_right', true);
+    }
+    else if (lastDirection === 'DOWN') {
+      duck.anims.play('duck_anim_down', true);
+    }
+    else if (lastDirection === 'RIGHT') {
+      duck.anims.play('duck_anim_up', true);
+    }
   }
+
 }
