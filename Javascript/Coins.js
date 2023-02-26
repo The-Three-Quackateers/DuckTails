@@ -20,7 +20,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: false,
+      debug: true,
     },
   },
 };
@@ -52,7 +52,11 @@ function create() {
   bg.setOrigin(0, 0);
 
   // Add the duck sprite and enable physics
-  duck = this.physics.add.sprite(1134, 731, "Player");
+  duck = this.physics.add
+    .sprite(1134, 731, "Player")
+    .setSize(27, 28)
+    .setCircle(8)
+    .setOffset(4, 5);
   //Duck Animations
   duck.anims.create({
     key: "duck_idle_right",
@@ -113,7 +117,7 @@ function create() {
   });
   //End of duck animations
 
-  duck.anims.play('duck_idle_down')
+  duck.anims.play("duck_idle_down");
 
   //Duck Scale and height
   duck.setScale(0.2, 0.2);
@@ -141,6 +145,7 @@ function create() {
   });
   duck.setCollideWorldBounds(true);
   breads.children.each(function (bread) {
+    bread.setCircle(55, 55).setOffset(7, 7);
     bread.setScale(0.28);
     let x = Phaser.Math.Between(50, 1100);
     let y = Phaser.Math.Between(50, 700);
@@ -148,6 +153,7 @@ function create() {
   }, this);
   // Set scale of the coins group
   coins.children.each(function (coin) {
+    coin.setCircle(50).setOffset(3, 3);
     let x = Phaser.Math.Between(50, 1110);
     let y = Phaser.Math.Between(50, 700);
     coin.setPosition(x, y);
@@ -178,7 +184,7 @@ function collectCoin(duck, coin) {
   score += 10;
   scoreText.setText("score: " + score);
   if (total === score) {
-    alert("you Wins");
+    alert("You win");
   }
 }
 //Game over function
