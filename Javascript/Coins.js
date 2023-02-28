@@ -1,17 +1,19 @@
 let gameScene = new Phaser.Scene("Game");
 
-let coinsSpawn = 5;
+let coinsSpawn = 10;
 let coinArray = [];
 let score = 0;
 let scoreText;
-let breadSpawn = 7;
+let breadSpawn = 5;
 let breadArray = [];
 let total = coinsSpawn * 10;
-
+let music;
+const windowHeight = window.innerHeight;
+const windowWidth = window.innerWidth;
 let config = {
   type: Phaser.AUTO,
-  width: 1214,
-  height: 800,
+  width: windowWidth,
+  height: windowHeight,
   scene: (gameScene = {
     update: update,
     create: create,
@@ -20,7 +22,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
@@ -29,6 +31,7 @@ let game = new Phaser.Game(config);
 let duck;
 let coinSound;
 let lastDirection;
+let decoration;
 function preload() {
   this.load.image("Bread", "images/Bread.png");
   this.load.image("Coins", "images/Coins.png");
@@ -45,18 +48,121 @@ function preload() {
     "images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp"
   );
   this.load.audio("coincollect", "sounds/mixkit-arcade-game-jump-coin-216.wav");
+  this.load.image("tiles", "images/tilemaps/manorTiles.png");
+  this.load.image("tileDeco", "images/tilemaps/manorTilesDeco.png");
+  this.load.tilemapTiledJSON("mansion", "Mansion.tmj");
+  this.load.audio("bgmusic", "images/Hotel.mp3");
+  this.load.audio("winning", "images/mixkit-ethereal-fairy-win-sound-2019.wav");
+  this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
 }
 
 function create() {
-  let bg = this.add.sprite(0, 0, "background");
-  bg.setOrigin(0, 0);
+  music = this.sound.add("bgmusic");
+  music.play();
+  music.loop = true;
+  music.setVolume(0.33);
 
-  // Add the duck sprite and enable physics
+  // Get the size of the canvas
+  const width = this.game.config.width;
+  const height = this.game.config.height;
+
+  // Create the Tiled map with the same size as the canvas
+  const map = this.make.tilemap({
+    key: "mansion",
+    tileWidth: 32,
+    tileHeight: 32,
+    width: width,
+    height: height,
+  });
+  const tileset = map.addTilesetImage("manorTiles", "tiles");
+  const tilesetDeco = map.addTilesetImage("manorTilesDeco", "tileDeco");
+
+  const basetiles = map.createLayer("Tile Layer 1", tileset);
+
+  decorations = map.createLayer("Tile Layer 2", tilesetDeco);
+  const centerX = map.widthInPixels / 2;
+  const centerY = map.heightInPixels / 2;
+  this.cameras.main.centerOn(centerX, centerY);
+  basetiles.setCollisionByProperty({ collides: true });
+  console.log(decorations);
+  decorations.setCollisionByExclusion([-1]);
+
+  this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+  console.log(
+    decorations.layer.data.map((row) => row.map((tile) => tile.collides))
+  );
+
+  // Create a new pickups group
+  this.coins = this.physics.add.group();
+  this.bread = this.physics.add.group();
+
+  // Find the object layer in the tilemap
+  const objectLayer = map.getObjectLayer("Spawn");
+
+  // Spawn pickups on the specified tiles
+  objectLayer.objects.forEach((object) => {
+    // Check if the object has a spawn property of 'Coins'
+    if (object) {
+      // Create a new pickup sprite at the object's position
+      const x = object.x;
+      const y = object.y;
+      const width = object.width;
+      const height = object.height;
+      const randomX = Phaser.Math.RND.integerInRange(x, x + width);
+
+      // Generate a random y coordinate within the bounds
+      const randomY = Phaser.Math.RND.integerInRange(y, y + height);
+
+      // Create a new pickup sprite at the random coordinates
+      const pickupCoins = this.physics.add.sprite(Phaser.Math.RND.integerInRange(x, x + width), Phaser.Math.RND.integerInRange(y, y + height), "Coins");
+      const pickupCoins2 = this.physics.add.sprite(randomX, randomY, "Coins");
+      pickupCoins.setScale(0.2);
+      pickupCoins.setCircle(50);
+      pickupCoins2.setScale(0.2);
+      pickupCoins2.setCircle(50);
+      // Add the pickup sprite to the pickups group
+      this.coins.add(pickupCoins);
+      this.coins.add(pickupCoins2)
+    }
+  });
+  objectLayer.objects.forEach((object) => {
+    // Check if the object has a spawn property of 'Coins'
+    if (object) {
+      // Create a new pickup sprite at the object's position
+      const x = object.x;
+      const y = object.y;
+      const width = object.width;
+      const height = object.height;
+      const randomX = Phaser.Math.RND.integerInRange(x, x + width);
+
+      // Generate a random y coordinate within the bounds
+      const randomY = Phaser.Math.RND.integerInRange(y, y + height);
+
+      // Create a new pickup sprite at the random coordinates
+
+      const pickupBread = this.physics.add.sprite(randomX, randomY, "Bread");
+      pickupBread.setScale(0.2);
+      pickupBread.setCircle(60)
+      // Add the pickup sprite to the pickups group
+
+      this.bread.add(pickupBread);
+    }
+  });
+
+  decorations.setCollisionByProperty({ collides: true });
+  this.physics.add.existing(decorations);
+
   duck = this.physics.add
-    .sprite(1134, 731, "Player")
+    .sprite(480, 93, "Player")
     .setSize(27, 28)
     .setCircle(8)
     .setOffset(4, 5);
+
+  this.physics.add.collider(duck, basetiles);
+
+  // Set the decorations layer to be interactive
+
   //Duck Animations
   duck.anims.create({
     key: "duck_idle_right",
@@ -120,59 +226,28 @@ function create() {
   duck.anims.play("duck_idle_down");
 
   //Duck Scale and height
-  duck.setScale(0.2, 0.2);
-  duck.displayWidth = 80;
-  duck.displayHeight = 80;
-
-  // Add score text
-  scoreText = this.add.text(16, 16, "score: 0", {
-    fontSize: "32px",
-    fill: "white",
-  });
+  duck.setScale(0.1, 0.1);
+  duck.displayWidth = 30;
+  duck.displayHeight = 30;
 
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });
 
-  //Coin physics (Collide)
-  let coins = this.physics.add.group({
-    key: "Coins",
-    repeat: coinsSpawn - 1,
-  });
-  //Bread physics (Collide)
-  let breads = this.physics.add.group({
-    key: "Bread",
-    repeat: breadSpawn - 1,
-  });
+  const spawn = map.findObject("Spawn", (obj) => obj);
+  console.log(spawn);
+
   duck.setCollideWorldBounds(true);
-  breads.children.each(function (bread) {
-    bread.setCircle(55, 55).setOffset(7, 7);
-    bread.setScale(0.28);
-    let x = Phaser.Math.Between(50, 1100);
-    let y = Phaser.Math.Between(50, 700);
-    bread.setPosition(x, y);
-  }, this);
-  // Set scale of the coins group
-  coins.children.each(function (coin) {
-    coin.setCircle(50).setOffset(3, 3);
-    let x = Phaser.Math.Between(50, 1110);
-    let y = Phaser.Math.Between(50, 700);
-    coin.setPosition(x, y);
-    coin.setScale(0.28);
-    setInterval(function () {
-      let x = Phaser.Math.Between(50, 1110);
-      let y = Phaser.Math.Between(50, 700);
-      coin.setPosition(x, y);
-    }, 10000);
-  }, this);
+
+  // Spawn coins within the playable area, but not on a collidable surface
 
   // Set up collision detection between the duck and coins
-  this.physics.add.overlap(duck, coins, collectCoin, null, this);
+  this.physics.add.overlap(duck, this.coins, collectCoin, null, this);
 
   //Changing this changes how long until the coins spawn
-  this.physics.add.overlap(duck, breads, gameOver, null, this);
+  this.physics.add.overlap(duck, this.bread, gameOver, null, this);
 
   this.cursors = this.input.keyboard.createCursorKeys();
-  console.log(this.cursors);
+  console.log(this.pickups);
 }
 
 //Oncollision coin collect function
@@ -182,14 +257,23 @@ function collectCoin(duck, coin) {
   coinSound.play();
   // Update the score
   score += 10;
-  scoreText.setText("score: " + score);
+  document.querySelector("p").textContent = score;
+  const winningMusic = this.sound.add("winning");
+
   if (total === score) {
+    winningMusic.play();
+    winningMusic.setVolume(0.2);
     alert("You win");
   }
 }
 //Game over function
 function gameOver(duck, bread) {
+  const dyingMusic = this.sound.add("dying");
+  dyingMusic.play();
+  dyingMusic.setVolume(0.16);
   alert("Game Over");
+  music.stop();
+  this.scene.stop();
 }
 
 //Movement keys update
