@@ -326,7 +326,7 @@ body.style.zoom = "1.05"
         collider.body.setCircle(16);
         collider.body.setOffset(15);
       } else {
-        collider.body.setOffset(23)
+        collider.body.setOffset(20)
         
       }
     }
