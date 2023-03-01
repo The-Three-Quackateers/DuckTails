@@ -12,7 +12,7 @@ const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 let config = {
   type: Phaser.AUTO,
-  parent : 'game-container',
+  parent: "game-container",
   width: 1200,
   height: 1200,
   scene: (gameScene2 = {
@@ -23,7 +23,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
@@ -50,7 +50,7 @@ function preload() {
   );
   this.load.audio("coincollect", "sounds/mixkit-arcade-game-jump-coin-216.wav");
   this.load.image("tiles", "images/tilemaps/kitchenTiles.png");
-  this.load.image("tunnels", "images/tilemaps/tunnelTiles.png")
+  this.load.image("tunnels", "images/tilemaps/tunnelTiles.png");
   this.load.image("tileDeco", "images/tilemaps/kitchenTilesDeco.png");
   this.load.tilemapTiledJSON("kitchen", "images/tilemaps/Kitchen.tmj");
   this.load.audio("bgmusic", "images/Hotel.mp3");
@@ -68,7 +68,6 @@ function create() {
   const width = this.game.config.width;
   const height = this.game.config.height;
 
-  
   // Create the Tiled map with the same size as the canvas
   const map = this.make.tilemap({
     key: "kitchen",
@@ -79,21 +78,20 @@ function create() {
   });
   const tileset = map.addTilesetImage("kitchenTiles", "tiles");
   const tilesetDeco = map.addTilesetImage("kitchenTilesDeco", "tileDeco");
-  const tunnels = map.addTilesetImage("tunnelTiles","tunnels")
+  const tunnels = map.addTilesetImage("tunnelTiles", "tunnels");
 
   const basetiles = map.createLayer("Tile Layer 1", tileset);
-  const tunnelTiles = map.createLayer("Tile Layer 4", tunnels)
+  const tunnelTiles = map.createLayer("Tile Layer 4", tunnels);
   decorations = map.createLayer("Tile Layer 2", tilesetDeco);
   map.createLayer("Tile Layer 3", tilesetDeco);
 
-    basetiles.setCollisionByProperty({ collides: true });
+  basetiles.setCollisionByProperty({ collides: true });
 
-  decorations.setCollisionByProperty({collides:true});
+  decorations.setCollisionByProperty({ collides: true });
 
   console.log(decorations);
 
   this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
 
   // Create a new pickups group
   this.coins = this.physics.add.group();
@@ -101,15 +99,14 @@ function create() {
 
   // Find the object layer in the tilemap
   const objectLayer = map.getObjectLayer("Spawn");
+  const PhysicsLayer = map.getObjectLayer("Physics");
 
-
-
-console.log(map.getObjectLayer("Spawn"))
+  console.log(map.getObjectLayer("Spawn"));
   // Spawn pickups on the specified tiles
   objectLayer.objects.forEach((object) => {
     // Check if the object has a spawn property of 'Coins'
-    if (object && !object.properties) {
-        console.log(object.properties)
+    if (object && object.properties && object.properties[0].name === "coins") {
+      console.log(object.properties);
       // Create a new pickup sprite at the object's position
       const x = object.x;
       const y = object.y;
@@ -121,15 +118,15 @@ console.log(map.getObjectLayer("Spawn"))
       const randomY = Phaser.Math.RND.integerInRange(y, y + height);
 
       // Create a new pickup sprite at the random coordinates
-      const pickupCoins = this.physics.add.sprite(Phaser.Math.RND.integerInRange(x, x + width), Phaser.Math.RND.integerInRange(y, y + height), "Coins");
-      const pickupCoins2 = this.physics.add.sprite(randomX, randomY, "Coins");
-      pickupCoins.setScale(0.2);
+      const pickupCoins = this.physics.add.sprite(
+        Phaser.Math.RND.integerInRange(x, x + width),
+        Phaser.Math.RND.integerInRange(y, y + height),
+        "Coins"
+      );
+      pickupCoins.setScale(0.27);
       pickupCoins.setCircle(50);
-      pickupCoins2.setScale(0.2);
-      pickupCoins2.setCircle(50);
       // Add the pickup sprite to the pickups group
-      this.coins.add(pickupCoins);
-      this.coins.add(pickupCoins2)
+      this.coins.add(pickupCoins)
     }
   });
   objectLayer.objects.forEach((object) => {
@@ -149,10 +146,43 @@ console.log(map.getObjectLayer("Spawn"))
 
       const pickupBread = this.physics.add.sprite(randomX, randomY, "Bread");
       pickupBread.setScale(0.2);
-      pickupBread.setCircle(60)
+      pickupBread.setCircle(60);
       // Add the pickup sprite to the pickups group
 
       this.bread.add(pickupBread);
+    }
+  });
+  const breadArr = [];
+  PhysicsLayer.objects.forEach((object) => {
+    // Check if the object has a spawn property of 'Bread'
+    if (object) {
+      // Create a new bread sprite at the object's position
+      const x = object.x;
+      const y = object.y;
+      const width = object.width;
+      const height = object.height;
+
+      // Create a new bread sprite at the random coordinates
+
+      for (let i = 0; i < breadSpawn; i++) {
+        const randomX = Phaser.Math.RND.integerInRange(x, x + width);
+
+        // Generate a random y coordinate within the bounds
+        const randomY = Phaser.Math.RND.integerInRange(y, y + height);
+
+        const bread = this.physics.add.sprite(randomX, randomY, "Bread");
+        bread.setBounce(1, 1);
+        bread.setScale(0.6);
+        bread.setCircle(57);
+        bread.setCollideWorldBounds(true);
+        bread.setVelocity(
+          Phaser.Math.RND.integerInRange(-200, 200),
+          Phaser.Math.RND.integerInRange(-200, 200)
+        );
+        this.physics.add.collider(bread, basetiles);
+        breadArr.push(bread);
+      }
+      this.physics.add.collider(breadArr, breadArr);
     }
   });
 
@@ -243,21 +273,27 @@ console.log(map.getObjectLayer("Spawn"))
   console.log(spawn);
 
   duck.setCollideWorldBounds(true);
-
+  console.log(map.getObjectLayer("Physics"));
   // Spawn coins within the playable area, but not on a collidable surface
-  objectLayer.objects.forEach(object => {
-    if (object.properties && object.properties[0].name !== "breadmageddon") {
-        const collider = this.physics.add.sprite(object.x, object.y, 'collider');
-        collider.setCollideWorldBounds(true);
+  objectLayer.objects.forEach((object) => {
+    if (object.properties && object.properties[0].name !== "breadmageddon" && object.properties[0].name !== "coins") {
+      const collider = this.physics.add.sprite(object.x, object.y, "collider");
+      collider.setCollideWorldBounds(true);
 
-        this.physics.add.collider(duck, collider);
-        collider.body.setCollideWorldBounds(true);
-        collider.body.setAllowGravity(false);
-        collider.body.immovable = true;
-        collider.setVisible(false)
-        collider.body.setCircle(16)
-        collider.body.setOffset(15)    }
-});
+      this.physics.add.collider(duck, collider);
+      collider.body.setCollideWorldBounds(true);
+      collider.body.setAllowGravity(false);
+      collider.body.immovable = true;
+      collider.setVisible(false);
+      if (object.ellipse) {
+        collider.body.setCircle(16);
+        collider.body.setOffset(15);
+      } else {
+        collider.body.setOffset(23)
+        
+      }
+    }
+  });
   // Set up collision detection between the duck and coins
   this.physics.add.overlap(duck, this.coins, collectCoin, null, this);
 
@@ -266,7 +302,7 @@ console.log(map.getObjectLayer("Spawn"))
 
   this.cursors = this.input.keyboard.createCursorKeys();
   console.log(this.pickups);
-//   this.scale.setScale(2)
+  //   this.scale.setScale(2)
 }
 
 //Oncollision coin collect function
