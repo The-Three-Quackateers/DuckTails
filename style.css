@@ -2,12 +2,28 @@
     box-sizing: border-box;
 }
 
+
+@font-face {
+    font-family: 'Arcade';
+    src: url('PublicPixel-z84yD.ttf')
+}
+
 body {
     background-color:black;
-    height:90vh;
+    height:100vh;
+    display: flex;
+    justify-content: center;
+    /* align-items: center;
+    align-content: center;
+    flex-direction: column; */
     margin: 0;
     margin-top: 0px;
     text-align: center;
     zoom: 0.717;
+    font-family: "Arcade";
+    flex-wrap: wrap;
+    /* background-image: url('images/pixel-art-light-rain-1j41s1afo55pvrl5.gif');
+    background-size: 100%; */
 }
+
 

@@ -12,8 +12,8 @@ const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 let config = {
   type: Phaser.AUTO,
-  width: 700,
-  height: 700,
+  width: 600,
+  height: 580,
   scene: (gameScene = {
     update: update,
     create: create,
@@ -227,6 +227,16 @@ function create() {
 
   duck.anims.play("duck_idle_down");
 
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      // Pause the game if the tab is hidden
+      game.scene.pause("default");
+    } else {
+      // Resume the game if the tab is visible
+      game.scene.resume("default");
+    }
+  });
+
   //Duck Scale and height
   duck.setScale(0.1, 0.1);
   duck.displayWidth = 30;
@@ -235,7 +245,6 @@ function create() {
   const image = document.createElement("img");
   image.src = "images/Pause.png";
   pauseButton.append(image);
-  pauseButton.style.position = "absolute";
   pauseButton.style.top = "80px";
   pauseButton.style.left = "10px";
   pauseButton.style.backgroundColor = "black";

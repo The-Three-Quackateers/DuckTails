@@ -182,7 +182,11 @@ function create() {
       console.log(game.scene.isPaused("default"));
     }
   });
-
+let body = document.querySelector('body')
+body.style.flexWrap = "nowrap"
+body.style.flexDirection = "row"
+body.style.alignItems = "strech"
+body.style.zoom = "1.1"
 
   decorations.setCollisionByProperty({ collides: true });
   this.physics.add.existing(decorations);

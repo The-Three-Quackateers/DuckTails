@@ -235,6 +235,9 @@ function create() {
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });
 
+  document.querySelector("body").style.alignItems = "flex-end"
+  document.querySelector("body").style.justifyContent = "normal"
+
   duck.setCollideWorldBounds(true);
 
   // Set up collision detection between the duck and coins
