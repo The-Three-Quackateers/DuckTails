@@ -12,8 +12,8 @@ const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 let config = {
   type: Phaser.AUTO,
-  width: windowWidth,
-  height: windowHeight,
+  width: 700,
+  height: 700,
   scene: (gameScene = {
     update: update,
     create: create,
@@ -54,6 +54,7 @@ function preload() {
   this.load.audio("bgmusic", "images/Hotel.mp3");
   this.load.audio("winning", "images/mixkit-ethereal-fairy-win-sound-2019.wav");
   this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
+  this.load.image("pauseButton","images/Pause.png")
 }
 
 function create() {
@@ -61,6 +62,7 @@ function create() {
   music.play();
   music.loop = true;
   music.setVolume(0.33);
+
 
   // Get the size of the canvas
   const width = this.game.config.width;
@@ -162,7 +164,7 @@ function create() {
   this.physics.add.collider(duck, basetiles);
 
   // Set the decorations layer to be interactive
-
+  
   //Duck Animations
   duck.anims.create({
     key: "duck_idle_right",
@@ -229,7 +231,28 @@ function create() {
   duck.setScale(0.1, 0.1);
   duck.displayWidth = 30;
   duck.displayHeight = 30;
+  const pauseButton = document.createElement("button");
+  const image = document.createElement("img");
+  image.src = "images/Pause.png";
+  pauseButton.append(image);
+  pauseButton.style.position = "absolute";
+  pauseButton.style.top = "80px";
+  pauseButton.style.left = "10px";
+  pauseButton.style.backgroundColor = "black";
+  document.body.appendChild(pauseButton);
 
+  pauseButton.addEventListener("click", function () {
+    if (!game.scene.isPaused("default")) {
+      game.scene.pause("default");
+      image.src = "images/Resume.png";
+      console.log(game.scene.isPaused("default"));
+    } else {
+      game.scene.resume("default");
+      image.src = "images/Pause.png";
+
+      console.log(game.scene.isPaused("default"));
+    }
+  });
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });
 
@@ -248,6 +271,7 @@ function create() {
 
   this.cursors = this.input.keyboard.createCursorKeys();
   console.log(this.pickups);
+  document.querySelector('body').style.zoom = 1
 }
 
 //Oncollision coin collect function
@@ -274,6 +298,9 @@ function gameOver(duck, bread) {
   alert("Game Over");
   music.stop();
   this.scene.stop();
+}
+function pauseGame() {
+  gameScene.pause();
 }
 
 //Movement keys update

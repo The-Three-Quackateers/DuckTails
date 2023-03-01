@@ -23,7 +23,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
@@ -125,8 +125,16 @@ function create() {
       );
       pickupCoins.setScale(0.27);
       pickupCoins.setCircle(50);
+      const pickupCoins2 = this.physics.add.sprite(
+        Phaser.Math.RND.integerInRange(x, x + width),
+        Phaser.Math.RND.integerInRange(y, y + height),
+        "Coins"
+      );
+      pickupCoins2.setScale(0.27);
+      pickupCoins2.setCircle(50);
       // Add the pickup sprite to the pickups group
       this.coins.add(pickupCoins)
+      this.coins.add(pickupCoins2)
     }
   });
   objectLayer.objects.forEach((object) => {
@@ -150,6 +158,28 @@ function create() {
       // Add the pickup sprite to the pickups group
 
       this.bread.add(pickupBread);
+    }
+  });
+  const pauseButton = document.createElement("button");
+  const image = document.createElement("img");
+  image.src = "images/Pause.png";
+  pauseButton.append(image);
+  pauseButton.style.position = "absolute";
+  pauseButton.style.top = "80px";
+  pauseButton.style.left = "10px";
+  pauseButton.style.backgroundColor = "black";
+  document.body.appendChild(pauseButton);
+
+  pauseButton.addEventListener("click", function () {
+    if (!game.scene.isPaused("default")) {
+      game.scene.pause("default");
+      image.src = "images/Resume.png";
+      console.log(game.scene.isPaused("default"));
+    } else {
+      game.scene.resume("default");
+      image.src = "images/Pause.png";
+
+      console.log(game.scene.isPaused("default"));
     }
   });
 
@@ -231,8 +261,8 @@ function create() {
 
   //Duck Scale and height
   duck.setScale(0.1, 0.1);
-  duck.displayWidth = 30;
-  duck.displayHeight = 30;
+  duck.displayWidth = 40;
+  duck.displayHeight = 40;
 
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });

@@ -23,7 +23,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
@@ -33,7 +33,7 @@ let duck;
 let coinSound;
 let lastDirection;
 let decorations;
-let spawn 
+let spawn;
 function preload() {
   this.load.image("Bread", "images/Bread.png");
   this.load.image("Coins", "images/Coins.png");
@@ -57,7 +57,10 @@ function preload() {
   this.load.image("props", "images/tilemaps/TX Props.png");
   this.load.image("struct", "images/tilemaps/TX Struct.png");
   this.load.tilemapTiledJSON("OpenField", "images/tilemaps/OpenField.tmj");
-  this.load.audio("bgmusic", "images/Undertale Mashup - Hopes and Dreams - His Theme - SAVE the World - Last Goodbye.mp3");
+  this.load.audio(
+    "bgmusic",
+    "images/Undertale Mashup - Hopes and Dreams - His Theme - SAVE the World - Last Goodbye.mp3"
+  );
   this.load.audio("winning", "images/mixkit-ethereal-fairy-win-sound-2019.wav");
   this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
 }
@@ -83,19 +86,19 @@ function create() {
   const grass = map.addTilesetImage("TX Tileset Grass", "tiles");
   const stone = map.addTilesetImage("TX Tileset Stone Ground", "stone");
   const plant = map.addTilesetImage("TX Plant", "plant");
-  const walls = map.addTilesetImage("TX Tileset Wall", "wall")
-  const prop = map.addTilesetImage("TX Props", "props")
-  const stucture = map.addTilesetImage("TX Struct", "struct")
+  const walls = map.addTilesetImage("TX Tileset Wall", "wall");
+  const prop = map.addTilesetImage("TX Props", "props");
+  const stucture = map.addTilesetImage("TX Struct", "struct");
 
-  const basetiles = map.createLayer("Tile Layer 1", [grass,walls]);
-  decorations = map.createLayer("Tile Layer 2", [prop,plant,stucture,stone]);
+  const basetiles = map.createLayer("Tile Layer 1", [grass, walls]);
+  decorations = map.createLayer("Tile Layer 2", [prop, plant, stucture, stone]);
 
   this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-console.log(basetiles)
-  basetiles.setCollisionByProperty({collides:true})
+  console.log(basetiles);
+  basetiles.setCollisionByProperty({ collides: true });
 
- const spawn = map.getObjectLayer("Object Layer 1") 
-console.log(spawn)
+  const spawn = map.getObjectLayer("Object Layer 1");
+  console.log(spawn);
 
   // Create a new bread sprite at the random coordinates
 
@@ -132,15 +135,37 @@ console.log(spawn)
     }
   });
   // Spawn pickups on the specified tiles
-  
+
   duck = this.physics.add
     .sprite(90, 80, "Player")
     .setSize(27, 28)
     .setCircle(8)
     .setOffset(4, 5);
-this.physics.add.collider(duck,basetiles)
-  // Set the decorations layer to be interactive
+  this.physics.add.collider(duck, basetiles);
+  // Set the pauseButton
 
+  const pauseButton = document.createElement("button");
+  const image = document.createElement("img");
+  image.src = "images/Pause.png";
+  pauseButton.append(image);
+  pauseButton.style.position = "absolute";
+  pauseButton.style.top = "80px";
+  pauseButton.style.left = "10px";
+  pauseButton.style.backgroundColor = "black";
+  document.body.appendChild(pauseButton);
+
+  pauseButton.addEventListener("click", function () {
+    if (!game.scene.isPaused("default")) {
+      game.scene.pause("default");
+      image.src = "images/Resume.png";
+      console.log(game.scene.isPaused("default"));
+    } else {
+      game.scene.resume("default");
+      image.src = "images/Pause.png";
+
+      console.log(game.scene.isPaused("default"));
+    }
+  });
   //Duck Animations
   duck.anims.create({
     key: "duck_idle_right",
@@ -210,7 +235,6 @@ this.physics.add.collider(duck,basetiles)
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });
 
-
   duck.setCollideWorldBounds(true);
 
   // Set up collision detection between the duck and coins
@@ -234,12 +258,10 @@ this.physics.add.collider(duck,basetiles)
         const coin = this.physics.add.sprite(randomX, randomY, "Coins");
         coin.setScale(0.6);
         coin.setCircle(50);
-        this.physics.add.overlap(duck, coin, collectCoin, null, this)
+        this.physics.add.overlap(duck, coin, collectCoin, null, this);
       }
-
     }
   });
-
 
   //Changing this changes how long until the coins spawn
   this.physics.add.overlap(duck, breadArr, gameOver, null, this);
@@ -254,41 +276,41 @@ function collectCoin(duck, coin) {
   // Destroy the coin sprite
   coin.destroy();
   coinSound.play();
- 
-  this.physics.add.overlap(duck, coin, collectCoin, null, this)
-    // Create a new bread sprite at the random coordinates
-        const x = 48
-        const y = 73.333333;
-        const width = 1056;
-        const height = 1065.33333;
-  
-        // Create a new bread sprite at the random coordinates
-  
-          const randomX = Phaser.Math.RND.integerInRange(x, x + width);
-  
-          // Generate a random y coordinate within the bounds
-          const randomY = Phaser.Math.RND.integerInRange(y, y + height);
 
-          coin = this.physics.add.sprite(
-            Phaser.Math.RND.integerInRange(x, x + width),
-            Phaser.Math.RND.integerInRange(y, y + height),
-            'Coins'
-          );
-          coin.setScale(0.6);
-          coin.setCircle(53);
-          this.physics.add.overlap(duck, coin, collectCoin, null, this)
-  
-          const bread = this.physics.add.sprite(randomX, randomY, "Bread");
-          bread.setBounce(1, 1);
-          bread.setScale(0.6);
-          bread.setCircle(57);
-          bread.setCollideWorldBounds(true);
-          bread.setVelocity(
-            Phaser.Math.RND.integerInRange(-200, 200),
-            Phaser.Math.RND.integerInRange(-200, 200)
-          );
-          breadArr.push(bread);
-        this.physics.add.collider(breadArr, breadArr);
+  this.physics.add.overlap(duck, coin, collectCoin, null, this);
+  // Create a new bread sprite at the random coordinates
+  const x = 48;
+  const y = 73.333333;
+  const width = 1056;
+  const height = 1065.33333;
+
+  // Create a new bread sprite at the random coordinates
+
+  const randomX = Phaser.Math.RND.integerInRange(x, x + width);
+
+  // Generate a random y coordinate within the bounds
+  const randomY = Phaser.Math.RND.integerInRange(y, y + height);
+
+  coin = this.physics.add.sprite(
+    Phaser.Math.RND.integerInRange(x, x + width),
+    Phaser.Math.RND.integerInRange(y, y + height),
+    "Coins"
+  );
+  coin.setScale(0.6);
+  coin.setCircle(53);
+  this.physics.add.overlap(duck, coin, collectCoin, null, this);
+
+  const bread = this.physics.add.sprite(randomX, randomY, "Bread");
+  bread.setBounce(1, 1);
+  bread.setScale(0.6);
+  bread.setCircle(57);
+  bread.setCollideWorldBounds(true);
+  bread.setVelocity(
+    Phaser.Math.RND.integerInRange(-200, 200),
+    Phaser.Math.RND.integerInRange(-200, 200)
+  );
+  breadArr.push(bread);
+  this.physics.add.collider(breadArr, breadArr);
 
   // Find the object layer in the tilemap
   // Update the score
@@ -314,32 +336,32 @@ function update() {
     duck.anims.play("duck_run_left", true);
     lastDirection = "LEFT";
     if (this.cursors.up.isDown) {
-      duck.setVelocityX(-100);
-      duck.setVelocityY(-100);
+      duck.setVelocityX(-170);
+      duck.setVelocityY(-170);
     } else if (this.cursors.down.isDown) {
-      duck.setVelocityX(-100);
-      duck.setVelocityY(100);
+      duck.setVelocityX(-170);
+      duck.setVelocityY(170);
     }
-    duck.setVelocityX(-100);
+    duck.setVelocityX(-170);
   } else if (this.cursors.right.isDown) {
     duck.anims.play("duck_run_right", true);
     lastDirection = "RIGHT";
     if (this.cursors.up.isDown) {
-      duck.setVelocityX(100);
-      duck.setVelocityY(-100);
+      duck.setVelocityX(170);
+      duck.setVelocityY(-170);
     } else if (this.cursors.down.isDown) {
-      duck.setVelocityX(100);
-      duck.setVelocityY(100);
+      duck.setVelocityX(170);
+      duck.setVelocityY(170);
     }
-    duck.setVelocityX(100);
+    duck.setVelocityX(170);
   } else if (this.cursors.up.isDown) {
     duck.anims.play("duck_run_up", true);
     lastDirection = "UP";
-    duck.setVelocityY(-100);
+    duck.setVelocityY(-170);
   } else if (this.cursors.down.isDown) {
     duck.anims.play("duck_run_down", true);
     lastDirection = "DOWN";
-    duck.setVelocityY(100);
+    duck.setVelocityY(170);
   } else {
     if (lastDirection === "LEFT") {
       duck.anims.play("duck_idle_left", true);
