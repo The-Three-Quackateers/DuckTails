@@ -153,6 +153,10 @@ function create() {
   pauseButton.style.left = "10px";
   pauseButton.style.backgroundColor = "black";
   document.body.appendChild(pauseButton);
+  let body = document.querySelector("body")
+  body.style.alignItems = "center"
+  body.style.alignContent = "center"
+  body.style.flexDirection = "column"
 
   pauseButton.addEventListener("click", function () {
     if (!game.scene.isPaused("default")) {

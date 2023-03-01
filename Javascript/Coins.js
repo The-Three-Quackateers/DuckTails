@@ -88,7 +88,10 @@ function create() {
   basetiles.setCollisionByProperty({ collides: true });
   console.log(decorations);
   decorations.setCollisionByExclusion([-1]);
-
+  let body = document.querySelector("body")
+  body.style.alignItems = "center"
+  body.style.alignContent = "center"
+  body.style.flexDirection = "column"
   this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
   console.log(

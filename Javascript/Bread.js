@@ -186,7 +186,7 @@ let body = document.querySelector('body')
 body.style.flexWrap = "nowrap"
 body.style.flexDirection = "row"
 body.style.alignItems = "strech"
-body.style.zoom = "1.1"
+body.style.zoom = "1.05"
 
   decorations.setCollisionByProperty({ collides: true });
   this.physics.add.existing(decorations);
