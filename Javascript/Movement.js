@@ -57,7 +57,7 @@ function preload() {
   this.load.image("props", "images/tilemaps/TX Props.png");
   this.load.image("struct", "images/tilemaps/TX Struct.png");
   this.load.tilemapTiledJSON("OpenField", "images/tilemaps/OpenField.tmj");
-  this.load.audio("bgmusic", "images/Hotel.mp3");
+  this.load.audio("bgmusic", "images/Undertale Mashup - Hopes and Dreams - His Theme - SAVE the World - Last Goodbye.mp3");
   this.load.audio("winning", "images/mixkit-ethereal-fairy-win-sound-2019.wav");
   this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
 }

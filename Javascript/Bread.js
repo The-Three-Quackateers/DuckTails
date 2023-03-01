@@ -23,7 +23,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: false,
+      debug: true,
     },
   },
 };
@@ -152,39 +152,7 @@ function create() {
       this.bread.add(pickupBread);
     }
   });
-  const breadArr = [];
-  PhysicsLayer.objects.forEach((object) => {
-    // Check if the object has a spawn property of 'Bread'
-    if (object) {
-      // Create a new bread sprite at the object's position
-      const x = object.x;
-      const y = object.y;
-      const width = object.width;
-      const height = object.height;
 
-      // Create a new bread sprite at the random coordinates
-
-      for (let i = 0; i < breadSpawn; i++) {
-        const randomX = Phaser.Math.RND.integerInRange(x, x + width);
-
-        // Generate a random y coordinate within the bounds
-        const randomY = Phaser.Math.RND.integerInRange(y, y + height);
-
-        const bread = this.physics.add.sprite(randomX, randomY, "Bread");
-        bread.setBounce(1, 1);
-        bread.setScale(0.6);
-        bread.setCircle(57);
-        bread.setCollideWorldBounds(true);
-        bread.setVelocity(
-          Phaser.Math.RND.integerInRange(-200, 200),
-          Phaser.Math.RND.integerInRange(-200, 200)
-        );
-        this.physics.add.collider(bread, basetiles);
-        breadArr.push(bread);
-      }
-      this.physics.add.collider(breadArr, breadArr);
-    }
-  });
 
   decorations.setCollisionByProperty({ collides: true });
   this.physics.add.existing(decorations);
@@ -274,6 +242,41 @@ function create() {
 
   duck.setCollideWorldBounds(true);
   console.log(map.getObjectLayer("Physics"));
+  const breadArr = [];
+  PhysicsLayer.objects.forEach((object) => {
+    // Check if the object has a spawn property of 'Bread'
+    if (object) {
+      // Create a new bread sprite at the object's position
+      const x = object.x;
+      const y = object.y;
+      const width = object.width;
+      const height = object.height;
+
+      // Create a new bread sprite at the random coordinates
+
+      for (let i = 0; i < breadSpawn; i++) {
+        const randomX = Phaser.Math.RND.integerInRange(x, x + width);
+
+        // Generate a random y coordinate within the bounds
+        const randomY = Phaser.Math.RND.integerInRange(y, y + height);
+
+        const bread = this.physics.add.sprite(randomX, randomY, "Bread");
+        bread.setBounce(1, 1);
+        bread.setScale(0.6);
+        bread.setCircle(55);
+        bread.setCollideWorldBounds(true);
+        bread.setVelocity(
+          Phaser.Math.RND.integerInRange(-200, 200),
+          Phaser.Math.RND.integerInRange(-200, 200)
+        );
+        this.physics.add.collider(bread, basetiles);
+        breadArr.push(bread);
+        this.physics.add.overlap(duck, bread, gameOver, null, this);
+      }
+      
+      this.physics.add.collider(breadArr, breadArr);
+    }
+  });
   // Spawn coins within the playable area, but not on a collidable surface
   objectLayer.objects.forEach((object) => {
     if (object.properties && object.properties[0].name !== "breadmageddon" && object.properties[0].name !== "coins") {
