@@ -19,10 +19,7 @@ class Wins extends Phaser.Scene {
     }
      
     create() {
-// center letters here
-// add things to reload game here
 
-       
 
         let background = this.add.sprite(0, 0, "background");
         background.setOrigin(0, 0); 
@@ -39,16 +36,24 @@ class Wins extends Phaser.Scene {
           duck.anims.play("duckDance", true);
         let title_text = this.add.text(745, 100, 'YOU WIN!', { fontSize: '100px', fill: '#000' });        
         let replay_text = this.add.text(600, 850, 'Press ENTER to replay', { fontSize: '60px', fill: '#000' });
-    
-    
-     
+
+            // ...
+          
+            // Add an event listener to detect "Enter" key press
+            this.input.keyboard.on('keydown-ENTER', function() {
+              // Reload the page
+              window.location.startScene();
+            });
+          
+            
+          
 
     }
 }
 
 var config = {
     type: Phaser.WEBGL,
-    width: 1920,
+    width: 1500,
     height: 1080,
     parent: 'body',
     scene: [ Wins ]
