@@ -292,27 +292,27 @@ class Level2 extends Phaser.Scene{
       super('Level2');
   }
   preload(){
-  this.load.image("Bread", "images/Bread.png");
-  this.load.image("Coins", "images/Coins.png");
-  this.load.spritesheet("Player", "images/idleAnimation.png", {
+  this.load.image("Bread", "./Images/Bread.png");
+  this.load.image("Coins", "./Images/Coins.png");
+  this.load.spritesheet("Player", "./Images/idleAnimation.png", {
     frameWidth: 24,
     frameHeight: 24,
   });
-  this.load.spritesheet("Player_Run", "images/runAnimation.png", {
+  this.load.spritesheet("Player_Run", "./Images/runAnimation.png", {
     frameWidth: 24,
     frameHeight: 24,
   });
   this.load.image(
     "background",
-    "images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp"
+    "./Images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp"
   );
-  this.load.audio("coincollect", "sounds/mixkit-arcade-game-jump-coin-216.wav");
-  this.load.image("tiles", "images/tilemaps/manorTiles.png");
-  this.load.image("tileDeco", "images/tilemaps/manorTilesDeco.png");
+  this.load.audio("coincollect", "./Sounds/mixkit-arcade-game-jump-coin-216.wav");
+  this.load.image("tiles", "./Images/tilemaps/manorTiles.png");
+  this.load.image("tileDeco", "./Images/tilemaps/manorTilesDeco.png");
   this.load.tilemapTiledJSON("mansion", "Mansion.tmj");
-  this.load.audio("bgmusic", "images/Hotel.mp3");
-  this.load.audio("winning", "images/mixkit-ethereal-fairy-win-sound-2019.wav");
-  this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
+  this.load.audio("bgmusic", "./Images/Hotel.mp3");
+  this.load.audio("winning", "./Images/mixkit-ethereal-fairy-win-sound-2019.wav");
+  this.load.audio("dying", "./Images/videogame-death-sound-43894.mp3");
   // this.load.image("pauseButton","images/Pause.png")
 }
 
