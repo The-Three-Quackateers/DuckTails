@@ -29,8 +29,8 @@ class StartScene extends Phaser.Scene{
   preload(){
       //name used to refer and the path to image
       //load is a method within the Scene class and image is what loading
-        this.load.image("StartBackGround", "images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp");
-        this.load.image("Coins", "images/Coins.png");
+        this.load.image("StartBackGround", "./Images/Summer-Farm-Top-Down-2D-Game-Tileset3.webp");
+        this.load.image("Coins", "./Images/Coins.png");
   }
   create(){
       noScore();
