@@ -1,4 +1,4 @@
-let gameScene3 = new Phaser.Scene("Game");
+// let gameScene3 = new Phaser.Scene("Game");
 
 let coinsSpawn = 4;
 let coinArray = [];
@@ -10,31 +10,36 @@ let total = coinsSpawn * 10;
 let music;
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
-let config = {
-  type: Phaser.AUTO,
-  parent: "game-container",
-  width: 1200,
-  height: 1100,
-  scene: (gameScene2 = {
-    update: update,
-    create: create,
-    preload: preload,
-  }),
-  physics: {
-    default: "arcade",
-    arcade: {
-      debug: false,
-    },
-  },
-};
+// let config = {
+//   type: Phaser.AUTO,
+//   parent: "game-container",
+//   width: 1200,
+//   height: 1100,
+//   scene: (gameScene2 = {
+//     update: update,
+//     create: create,
+//     preload: preload,
+//   }),
+//   physics: {
+//     default: "arcade",
+//     arcade: {
+//       debug: false,
+//     },
+//   },
+// };
 
-let game = new Phaser.Game(config);
+// let game = new Phaser.Game(config);
 let duck;
 let coinSound;
 let lastDirection;
 let decorations;
 let spawn;
-function preload() {
+class Level4 extends Phaser.Scene{
+  constructor ()
+  {
+      super('Level4');
+  }
+preload() {
   this.load.image("Bread", "images/Bread.png");
   this.load.image("Coins", "images/Coins.png");
   this.load.spritesheet("Player", "images/idleAnimation.png", {
@@ -65,7 +70,8 @@ function preload() {
   this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
 }
 
-function create() {
+create() {
+  yesScore();
   music = this.sound.add("bgmusic");
   music.play();
   music.loop = true;
@@ -131,7 +137,7 @@ function create() {
     if (!game.scene.isPaused("default")) {
       game.scene.pause("default");
       image.src = "images/Resume.png";
-      console.log(game.scene.isPaused("default"));
+      console.log(this.scene.isPaused("default"));
     } else {
       game.scene.resume("default");
       image.src = "images/Pause.png";
@@ -279,6 +285,53 @@ function create() {
   console.log(this.pickups);
   //   this.scale.setScale(2)
 }
+//Movement keys update
+update() {
+  duck.setVelocity(0);
+
+  if (this.cursors.left.isDown) {
+    duck.anims.play("duck_run_left", true);
+    lastDirection = "LEFT";
+    if (this.cursors.up.isDown) {
+      duck.setVelocityX(-170);
+      duck.setVelocityY(-170);
+    } else if (this.cursors.down.isDown) {
+      duck.setVelocityX(-170);
+      duck.setVelocityY(170);
+    }
+    duck.setVelocityX(-170);
+  } else if (this.cursors.right.isDown) {
+    duck.anims.play("duck_run_right", true);
+    lastDirection = "RIGHT";
+    if (this.cursors.up.isDown) {
+      duck.setVelocityX(170);
+      duck.setVelocityY(-170);
+    } else if (this.cursors.down.isDown) {
+      duck.setVelocityX(170);
+      duck.setVelocityY(170);
+    }
+    duck.setVelocityX(170);
+  } else if (this.cursors.up.isDown) {
+    duck.anims.play("duck_run_up", true);
+    lastDirection = "UP";
+    duck.setVelocityY(-170);
+  } else if (this.cursors.down.isDown) {
+    duck.anims.play("duck_run_down", true);
+    lastDirection = "DOWN";
+    duck.setVelocityY(170);
+  } else {
+    if (lastDirection === "LEFT") {
+      duck.anims.play("duck_idle_left", true);
+    } else if (lastDirection === "RIGHT") {
+      duck.anims.play("duck_idle_right", true);
+    } else if (lastDirection === "DOWN") {
+      duck.anims.play("duck_idle_down", true);
+    } else if (lastDirection === "UP") {
+      duck.anims.play("duck_idle_up", true);
+    }
+  }
+}
+};
 
 //Oncollision coin collect function
 function collectCoin(duck, coin) {
@@ -338,50 +391,8 @@ function gameOver(duck, bread) {
   music.stop();
   this.scene.stop();
 }
-
-//Movement keys update
-function update() {
-  duck.setVelocity(0);
-
-  if (this.cursors.left.isDown) {
-    duck.anims.play("duck_run_left", true);
-    lastDirection = "LEFT";
-    if (this.cursors.up.isDown) {
-      duck.setVelocityX(-170);
-      duck.setVelocityY(-170);
-    } else if (this.cursors.down.isDown) {
-      duck.setVelocityX(-170);
-      duck.setVelocityY(170);
-    }
-    duck.setVelocityX(-170);
-  } else if (this.cursors.right.isDown) {
-    duck.anims.play("duck_run_right", true);
-    lastDirection = "RIGHT";
-    if (this.cursors.up.isDown) {
-      duck.setVelocityX(170);
-      duck.setVelocityY(-170);
-    } else if (this.cursors.down.isDown) {
-      duck.setVelocityX(170);
-      duck.setVelocityY(170);
-    }
-    duck.setVelocityX(170);
-  } else if (this.cursors.up.isDown) {
-    duck.anims.play("duck_run_up", true);
-    lastDirection = "UP";
-    duck.setVelocityY(-170);
-  } else if (this.cursors.down.isDown) {
-    duck.anims.play("duck_run_down", true);
-    lastDirection = "DOWN";
-    duck.setVelocityY(170);
-  } else {
-    if (lastDirection === "LEFT") {
-      duck.anims.play("duck_idle_left", true);
-    } else if (lastDirection === "RIGHT") {
-      duck.anims.play("duck_idle_right", true);
-    } else if (lastDirection === "DOWN") {
-      duck.anims.play("duck_idle_down", true);
-    } else if (lastDirection === "UP") {
-      duck.anims.play("duck_idle_up", true);
-    }
+function yesScore(){
+  document.getElementById("score").style.visibility = "visible";
   }
-}
+
+export default Level4;
