@@ -54,6 +54,7 @@ class StartScene extends Phaser.Scene{
           //-1 means loop forever
           loop: -1
       })
+      // this.add.bitmapText(100, 100, 'myFont', 'Hello, World!'
       const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
       const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
       // const loadingText = this.add.text(screenCenterX, screenCenterY, 'Loading: 0%').setOrigin(0.5);
@@ -642,7 +643,9 @@ function collectCoin(duck, coin) {
     document.querySelector("p").textContent = score;
     alert("You win");
     this.scene.stop();
+    document.querySelector("body").style.zoom = 0.8
     this.scene.start(`Wins`)
+    this.scale.setGameSize(1200, 1200); 
   } else if (level === 1){
     if(level !== 5){
       level ++;
