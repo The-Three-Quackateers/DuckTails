@@ -640,18 +640,26 @@ function collectCoin(duck, coin) {
   if (total === score) {
     winningMusic.play();
     winningMusic.setVolume(0.2);
+   
+  if(level === 2){
+    score = 0;
+    document.querySelector("p").textContent = score;
+    alert("You win");
+    this.scene.stop();
+    this.scene.start(`Wins`)
+  } else if (level === 1){
     if(level !== 5){
       level ++;
   }
-    console.log(level)
-    score = 0;
-    document.querySelector("p").textContent = score;
+   score = 0;
+   document.querySelector("p").textContent = score;
     //maybe add delay
     alert("You win");
     this.scene.stop();
     this.scene.start(`Level${level}`)
     //this.scene.start('Wins')
   }
+}
 }
 //Game over function
 function gameOver(duck, bread) {
