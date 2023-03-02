@@ -672,6 +672,8 @@ function gameOver(duck, bread) {
   music.stop();
   this.scene.stop();
   this.scene.start('Lose');
+  this.scale.setGameSize(1200, 1200); 
+
 }
 // function pauseGame() {
 //   gameScene.pause();
