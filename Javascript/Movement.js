@@ -102,38 +102,7 @@ function create() {
 
   // Create a new bread sprite at the random coordinates
 
-  spawn.objects.forEach((object) => {
-    // Check if the object has a spawn property of 'Bread'
-    if (object) {
-      // Create a new bread sprite at the object's position
-      const x = object.x;
-      const y = object.y;
-      const width = object.width;
-      const height = object.height;
-
-      // Create a new bread sprite at the random coordinates
-
-      for (let i = 0; i < breadSpawn; i++) {
-        const randomX = Phaser.Math.RND.integerInRange(x, x + width);
-
-        // Generate a random y coordinate within the bounds
-        const randomY = Phaser.Math.RND.integerInRange(y, y + height);
-
-        const bread = this.physics.add.sprite(randomX, randomY, "Bread");
-        bread.setBounce(1, 1);
-        bread.setScale(0.6);
-        bread.setCircle(57);
-        bread.setCollideWorldBounds(true);
-        bread.setVelocity(
-          Phaser.Math.RND.integerInRange(-200, 200),
-          Phaser.Math.RND.integerInRange(-200, 200)
-        );
-        this.physics.add.collider(bread, basetiles);
-        breadArr.push(bread);
-      }
-      this.physics.add.collider(breadArr, breadArr);
-    }
-  });
+  
   // Spawn pickups on the specified tiles
 
   duck = this.physics.add
@@ -269,6 +238,39 @@ function create() {
       }
     }
   });
+  spawn.objects.forEach((object) => {
+    // Check if the object has a spawn property of 'Bread'
+    if (object) {
+      // Create a new bread sprite at the object's position
+      const x = object.x;
+      const y = object.y;
+      const width = object.width;
+      const height = object.height;
+
+      // Create a new bread sprite at the random coordinates
+
+      for (let i = 0; i < breadSpawn; i++) {
+        let randomX, randomY;
+        do {
+          randomX = Phaser.Math.RND.integerInRange(x, x + width);
+          randomY = Phaser.Math.RND.integerInRange(y, y + height);
+        } while (Phaser.Math.Distance.Between(randomX, randomY, duck.x, duck.y) < 100);
+
+        const bread = this.physics.add.sprite(randomX, randomY, "Bread");
+        bread.setBounce(1, 1);
+        bread.setScale(0.6);
+        bread.setCircle(57);
+        bread.setCollideWorldBounds(true);
+        bread.setVelocity(
+          Phaser.Math.RND.integerInRange(-200, 200),
+          Phaser.Math.RND.integerInRange(-200, 200)
+        );
+        this.physics.add.collider(bread, basetiles);
+        breadArr.push(bread);
+      }
+      this.physics.add.collider(breadArr, breadArr);
+    }
+  });
 
   //Changing this changes how long until the coins spawn
   this.physics.add.overlap(duck, breadArr, gameOver, null, this);
@@ -283,7 +285,7 @@ function collectCoin(duck, coin) {
   // Destroy the coin sprite
   coin.destroy();
   coinSound.play();
-
+  score += 10;
   this.physics.add.overlap(duck, coin, collectCoin, null, this);
   // Create a new bread sprite at the random coordinates
   const x = 48;
@@ -292,11 +294,11 @@ function collectCoin(duck, coin) {
   const height = 1065.33333;
 
   // Create a new bread sprite at the random coordinates
-
-  const randomX = Phaser.Math.RND.integerInRange(x, x + width);
-
-  // Generate a random y coordinate within the bounds
-  const randomY = Phaser.Math.RND.integerInRange(y, y + height);
+  let randomX, randomY;
+  do {
+    randomX = Phaser.Math.RND.integerInRange(x, x + width);
+    randomY = Phaser.Math.RND.integerInRange(y, y + height);
+  } while (Phaser.Math.Distance.Between(randomX, randomY, duck.x, duck.y) < 120);
 
   coin = this.physics.add.sprite(
     Phaser.Math.RND.integerInRange(x, x + width),
@@ -306,6 +308,7 @@ function collectCoin(duck, coin) {
   coin.setScale(0.6);
   coin.setCircle(53);
   this.physics.add.overlap(duck, coin, collectCoin, null, this);
+  if(score % 20 === 0){
 
   const bread = this.physics.add.sprite(randomX, randomY, "Bread");
   bread.setBounce(1, 1);
@@ -318,10 +321,11 @@ function collectCoin(duck, coin) {
   );
   breadArr.push(bread);
   this.physics.add.collider(breadArr, breadArr);
+  }
 
   // Find the object layer in the tilemap
   // Update the score
-  score += 10;
+  
   document.querySelector("p").textContent = score;
   const winningMusic = this.sound.add("winning");
 }
