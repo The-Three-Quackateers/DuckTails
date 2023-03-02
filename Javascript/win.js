@@ -16,6 +16,8 @@ class Wins extends Phaser.Scene {
     }
      
     create() {
+        document.querySelector("body").style.zoom = 0.8
+
         noScore();
         const windowHeight = window.innerHeight;
         const windowWidth = window.innerWidth;
@@ -34,6 +36,10 @@ class Wins extends Phaser.Scene {
           duck.anims.play("duckDance", true);
         let title_text = this.add.text(370, 100, 'YOU WIN!', { fontSize: '100px', fill: '#000' });        
         let replay_text = this.add.text(200, 750, 'Press ENTER to replay', { fontSize: '60px', fill: '#000' });
+        let textLevel4 = this.add.text(70, 800, 'Press SPACE to try again',{ fontSize: '75px', fill: '#000' });
+        this.input.keyboard.on('keydown-SPACE', function() {
+            this.scene.start('Level4');
+        },this);
 
             // ...
           

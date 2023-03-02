@@ -16,6 +16,8 @@ class Lose extends Phaser.Scene {
   }
      
   create() {
+    document.querySelector("body").style.zoom = 0.95
+
     noScore();
     this.game.config.width= 1600;
     this.game.config.height= 1080;

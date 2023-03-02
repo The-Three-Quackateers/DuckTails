@@ -59,20 +59,15 @@ class StartScene extends Phaser.Scene{
       // const loadingText = this.add.text(screenCenterX, screenCenterY, 'Loading: 0%').setOrigin(0.5);
       let welcome = this.add.text(screenCenterX, 340, "DUCKTAILS", {
         fontSize: "100px",
-        fill: "white",
         }).setOrigin(0.5);
         let start = this.add.text(screenCenterX, screenCenterY, "CLICK ANYWHERE TO START GAME", {
           fontSize: "50px",
-          fill: "pink",
           }).setOrigin(0.5);
           let instruction = this.add.text(screenCenterX,200, "HOW TO PLAY", {
             fontSize: "50px",
-            fill: "pink",
             }).setOrigin(0.5);
             let howTo = this.add.text(screenCenterX,240, "Move using the arrow keys, avoid bread, and collect coins", {
               fontSize: "20px",
-              fill: "pink",
-              backgroundColor: "white",
               }).setOrigin(0.5);
           //   instruction.setInteractive()
           //   instruction.on('pointerup', function (pointer) {
@@ -84,7 +79,7 @@ class StartScene extends Phaser.Scene{
         //     this.scene.start('Level1');
         // }, this);
         this.input.on('pointerup', function (pointer) {
-          this.scene.start('Level1');
+          this.scene.start('Wins');
       }, this);
   }
 }
@@ -95,6 +90,7 @@ class Level1 extends Phaser.Scene{
       super('Level1');
   }
   preload(){
+    this.load.bitmapFont('myFont', '../PublicPixel-z84yD.ttf');
     this.load.image("Bread", "./Images/Bread.png");
     this.load.image("Coins", "./Images/Coins.png");
     this.load.spritesheet("Player", "./Images/idleAnimation.png", {
@@ -135,9 +131,9 @@ class Level1 extends Phaser.Scene{
     .setCircle(8)
     .setOffset(4, 5);
 
-  duck.setScale(0.1, 0.1);
-  duck.displayWidth = 30;
-  duck.displayHeight = 30;
+  duck.setScale(0.2);
+  duck.displayWidth = 50;
+  duck.displayHeight = 50;
     
       //Duck Animations
   duck.anims.create({
@@ -317,7 +313,9 @@ class Level2 extends Phaser.Scene{
 }
 
  create() {
-  yesScore();
+  document.querySelector("body").style.zoom = 1.07
+  this.scale.setGameSize(600, 680); 
+   yesScore();
   music = this.sound.add("bgmusic");
   music.play();
   music.loop = true;
@@ -539,8 +537,6 @@ class Level2 extends Phaser.Scene{
   this.physics.add.overlap(duck, this.bread, gameOver, null, this);
 
   this.cursors = this.input.keyboard.createCursorKeys();
-  console.log(this.pickups);
-  // document.querySelector('body').style.zoom = 1
 }
 
 //Movement keys update
@@ -681,7 +677,7 @@ function gameOver(duck, bread) {
 let config = {
   type: Phaser.AUTO,
   width: 1200,
-  height: 1200,
+  height: 1000,
   scene: [StartScene, Level1, Level2, Level3, Level4, Lose, Wins, InScene],
   physics: {
     default: "arcade",

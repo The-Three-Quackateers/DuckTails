@@ -13,11 +13,11 @@ body {
     height:100vh;
     display: flex;
     justify-content: center;
-   
+   overflow: hidden;
     margin: 0;
     margin-top: 0px;
     text-align: center;
-    zoom: 0.717;
+    zoom: 0.8;
     font-family: "Arcade";
     flex-wrap: wrap;
     /* background-image: url('images/pixel-art-light-rain-1j41s1afo55pvrl5.gif');

@@ -71,6 +71,8 @@ preload() {
 }
 
 create() {
+  document.querySelector("body").style.zoom = 0.7
+  this.scale.setGameSize(1200, 1100); 
   yesScore();
   music = this.sound.add("bgmusic");
   music.play();
@@ -119,32 +121,32 @@ create() {
   this.physics.add.collider(duck, basetiles);
   // Set the pauseButton
 
-  const pauseButton = document.createElement("button");
-  const image = document.createElement("img");
-  image.src = "images/Pause.png";
-  pauseButton.append(image);
-  pauseButton.style.position = "absolute";
-  pauseButton.style.top = "80px";
-  pauseButton.style.left = "10px";
-  pauseButton.style.backgroundColor = "black";
-  document.body.appendChild(pauseButton);
-  let body = document.querySelector("body")
-  body.style.alignItems = "center"
-  body.style.alignContent = "center"
-  body.style.flexDirection = "column"
+  // const pauseButton = document.createElement("button");
+  // const image = document.createElement("img");
+  // image.src = "images/Pause.png";
+  // pauseButton.append(image);
+  // pauseButton.style.position = "absolute";
+  // pauseButton.style.top = "80px";
+  // pauseButton.style.left = "10px";
+  // pauseButton.style.backgroundColor = "black";
+  // document.body.appendChild(pauseButton);
+  // let body = document.querySelector("body")
+  // body.style.alignItems = "center"
+  // body.style.alignContent = "center"
+  // body.style.flexDirection = "column"
 
-  pauseButton.addEventListener("click", function () {
-    if (!game.scene.isPaused("default")) {
-      game.scene.pause("default");
-      image.src = "images/Resume.png";
-      console.log(this.scene.isPaused("default"));
-    } else {
-      game.scene.resume("default");
-      image.src = "images/Pause.png";
+  // pauseButton.addEventListener("click", function () {
+  //   if (!game.scene.isPaused("Level4")) {
+  //     game.scene.pause("Level4");
+  //     image.src = "images/Resume.png";
+  //     console.log(this.scene.isPaused("default"));
+  //   } else {
+  //     game.scene.resume("Level4");
+  //     image.src = "images/Pause.png";
 
-      console.log(game.scene.isPaused("default"));
-    }
-  });
+  //     console.log(game.scene.isPaused("Level4"));
+  //   }
+  // });
   //Duck Animations
   duck.anims.create({
     key: "duck_idle_right",
@@ -214,8 +216,7 @@ create() {
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });
 
-  document.querySelector("body").style.alignItems = "flex-end"
-  document.querySelector("body").style.justifyContent = "normal"
+
 
   duck.setCollideWorldBounds(true);
 
