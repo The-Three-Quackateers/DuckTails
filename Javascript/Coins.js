@@ -79,7 +79,7 @@ class StartScene extends Phaser.Scene{
         //     this.scene.start('Level1');
         // }, this);
         this.input.on('pointerup', function (pointer) {
-          this.scene.start('Wins');
+          this.scene.start('Level1');
       }, this);
   }
 }
