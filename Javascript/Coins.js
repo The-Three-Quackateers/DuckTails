@@ -37,14 +37,14 @@ class StartScene extends Phaser.Scene{
       let bg = this.add.sprite(0, 0, "StartBackGround");
       bg.setOrigin(0, 0);
       //400 is x and 150 is y so position on screen where logo will be displayed
-      let logo = this.add.image(514,600,'Coins')
+      let logo = this.add.image(577,500,'Coins')
 
       //tweens is an animation, this.tweens.add creates a new tween
       this.tweens.add({
           //target is the logo var
           targets: logo,
           //this is the y where we want to get
-          y: 570,
+          y: 444,
           //we want to get there in 2 seconds
           duration: 500,
           //easing function so how the motion looks
@@ -61,7 +61,7 @@ class StartScene extends Phaser.Scene{
         fontSize: "100px",
         fill: "white",
         }).setOrigin(0.5);
-        let start = this.add.text(screenCenterX, screenCenterY, "START GAME", {
+        let start = this.add.text(screenCenterX, screenCenterY, "CLICK ANYWHERE TO START GAME", {
           fontSize: "50px",
           fill: "pink",
           }).setOrigin(0.5);
@@ -69,20 +69,22 @@ class StartScene extends Phaser.Scene{
             fontSize: "50px",
             fill: "pink",
             }).setOrigin(0.5);
-            instruction.setInteractive()
-            instruction.on('pointerup', function (pointer) {
-              this.scene.start('SceneIn');
-          }, this);
-          start.setInteractive();
-          console.log("yer")
-          start.on('pointerup', function (pointer) {
-            console.log("hi")
-            this.scene.start('Level1');
-        }, this);
+            let howTo = this.add.text(screenCenterX,240, "Move using the arrow keys, avoid bread, and collect coins", {
+              fontSize: "20px",
+              fill: "pink",
+              backgroundColor: "white",
+              }).setOrigin(0.5);
+          //   instruction.setInteractive()
+          //   instruction.on('pointerup', function (pointer) {
+          //     this.scene.start('SceneIn');
+          // }, this);
+        //   start.setInteractive();
+        //   start.on('pointerup', function (pointer) {
+        //     console.log("hi")
+        //     this.scene.start('Level1');
+        // }, this);
         this.input.on('pointerup', function (pointer) {
-
           this.scene.start('Level1');
-
       }, this);
   }
 }
@@ -311,10 +313,11 @@ class Level2 extends Phaser.Scene{
   this.load.audio("bgmusic", "images/Hotel.mp3");
   this.load.audio("winning", "images/mixkit-ethereal-fairy-win-sound-2019.wav");
   this.load.audio("dying", "images/videogame-death-sound-43894.mp3");
-  this.load.image("pauseButton","images/Pause.png")
+  // this.load.image("pauseButton","images/Pause.png")
 }
 
  create() {
+  yesScore();
   music = this.sound.add("bgmusic");
   music.play();
   music.loop = true;
@@ -345,10 +348,10 @@ class Level2 extends Phaser.Scene{
   basetiles.setCollisionByProperty({ collides: true });
   console.log(decorations);
   decorations.setCollisionByExclusion([-1]);
-  let body = document.querySelector("body")
-  body.style.alignItems = "center"
-  body.style.alignContent = "center"
-  body.style.flexDirection = "column"
+  // let body = document.querySelector("body")
+  // body.style.alignItems = "center"
+  // body.style.alignContent = "center"
+  // body.style.flexDirection = "column"
   this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
   console.log(
@@ -487,41 +490,38 @@ class Level2 extends Phaser.Scene{
 
   duck.anims.play("duck_idle_down");
 
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      // Pause the game if the tab is hidden
-      game.scene.pause("default");
-    } else {
-      // Resume the game if the tab is visible
-      game.scene.resume("default");
-    }
-  });
+  // document.addEventListener("visibilitychange", function () {
+  //   if (document.hidden) {
+  //     // Pause the game if the tab is hidden
+  //     this,s.scene.pause("Level2");
+  //   } else {
+  //     // Resume the game if the tab is visible
+  //     this.scene.resume("Level2");
+  //   }
+  // });
 
   //Duck Scale and height
   duck.setScale(0.1, 0.1);
   duck.displayWidth = 30;
   duck.displayHeight = 30;
-  const pauseButton = document.createElement("button");
-  const image = document.createElement("img");
-  image.src = "images/Pause.png";
-  pauseButton.append(image);
-  pauseButton.style.top = "80px";
-  pauseButton.style.left = "10px";
-  pauseButton.style.backgroundColor = "black";
-  document.body.appendChild(pauseButton);
+  //const pauseButton = document.createElement("button");
+  // const image = document.createElement("img");
+  // image.src = "images/Pause.png";
+  // pauseButton.append(image);
+  // pauseButton.style.top = "80px";
+  // pauseButton.style.left = "10px";
+  // pauseButton.style.backgroundColor = "black";
+  // document.body.appendChild(pauseButton);
 
-  pauseButton.addEventListener("click", function () {
-    if (!game.scene.isPaused("default")) {
-      game.scene.pause("default");
-      image.src = "images/Resume.png";
-      console.log(game.scene.isPaused("default"));
-    } else {
-      game.scene.resume("default");
-      image.src = "images/Pause.png";
-
-      console.log(game.scene.isPaused("default"));
-    }
-  });
+  // pauseButton.addEventListener("click", function () {
+  //   if (!this.scene.isPaused("Level2")) {
+  //     this.scene.pause("Level2");
+  //     image.src = "images/Resume.png";
+  //   } else {
+  //     this.scene.resume("Level2");
+  //     image.src = "images/Pause.png";
+  //   }
+  // });
   //Coin sound effect
   coinSound = this.sound.add("coincollect", { loop: false });
 
@@ -540,7 +540,7 @@ class Level2 extends Phaser.Scene{
 
   this.cursors = this.input.keyboard.createCursorKeys();
   console.log(this.pickups);
-  document.querySelector('body').style.zoom = 1
+  // document.querySelector('body').style.zoom = 1
 }
 
 //Movement keys update
@@ -640,7 +640,6 @@ function collectCoin(duck, coin) {
   if (total === score) {
     winningMusic.play();
     winningMusic.setVolume(0.2);
-    console.log(level)
     if(level !== 5){
       level ++;
   }
@@ -649,7 +648,9 @@ function collectCoin(duck, coin) {
     document.querySelector("p").textContent = score;
     //maybe add delay
     alert("You win");
+    this.scene.stop();
     this.scene.start(`Level${level}`)
+    //this.scene.start('Wins')
   }
 }
 //Game over function
@@ -658,17 +659,21 @@ function gameOver(duck, bread) {
   dyingMusic.play();
   dyingMusic.setVolume(0.16);
   alert("Game Over");
+  level--;
+  score = 0;
+  document.querySelector("p").textContent = score;
   music.stop();
   this.scene.stop();
   this.scene.start('Lose');
 }
-function pauseGame() {
-  gameScene.pause();
-}
+// function pauseGame() {
+//   gameScene.pause();
+// }
+
 let config = {
   type: Phaser.AUTO,
-  width: 1000,
-  height: 1000,
+  width: 1200,
+  height: 1200,
   scene: [StartScene, Level1, Level2, Level3, Level4, Lose, Wins, InScene],
   physics: {
     default: "arcade",
