@@ -391,6 +391,7 @@ function gameOver(duck, bread) {
   alert("Game Over");
   music.stop();
   this.scene.stop();
+  this.scene.start('Lose');
 }
 function yesScore(){
   document.getElementById("score").style.visibility = "visible";

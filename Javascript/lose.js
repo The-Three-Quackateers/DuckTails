@@ -32,12 +32,19 @@ class Lose extends Phaser.Scene {
     duck2.setOrigin(0, 0);
     duck2.setScale(0.7);
 
-    let title_text = this.add.text(370, 100, 'YOU LOSE!', { fontSize: '100px', fill: '#000' });        
-    let replay_text = this.add.text(70, 800, 'Press ENTER to try again',{ fontSize: '75px', fill: '#000' });
+    let title_text = this.add.text(350, 100, 'YOU LOSE!', { fontSize: '100px', fill: '#000' });        
+    let replay_text = this.add.text(70, 700, 'Press ENTER to try again',{ fontSize: '75px', fill: '#000' });
+    let home_text = this.add.text(250, 800, 'Press SPACE to go home',{ fontSize: '55px', fill: '#000' });
+
 
     this.input.keyboard.on('keydown-ENTER', function() {
         // Reload the page
         this.scene.start('Level1');
+      },this);
+
+      this.input.keyboard.on('keydown-SPACE', function() {
+        // Reload the page
+        this.scene.start('StartScene');
       },this);
     
     }

@@ -307,7 +307,7 @@ class Level2 extends Phaser.Scene{
   this.load.image("tiles", "./Images/tilemaps/manorTiles.png");
   this.load.image("tileDeco", "./Images/tilemaps/manorTilesDeco.png");
   this.load.tilemapTiledJSON("mansion", "Mansion.tmj");
-  this.load.audio("bgmusic", "./Images/Hotel.mp3");
+  // this.load.audio("bgmusic", "./Images/Hotel.mp3");
   this.load.audio("winning", "./Images/mixkit-ethereal-fairy-win-sound-2019.wav");
   this.load.audio("dying", "./Images/videogame-death-sound-43894.mp3");
   // this.load.image("pauseButton","images/Pause.png")
@@ -317,11 +317,6 @@ class Level2 extends Phaser.Scene{
   document.querySelector("body").style.zoom = 1.07
   this.scale.setGameSize(600, 680); 
    yesScore();
-  music = this.sound.add("bgmusic");
-  music.play();
-  music.loop = true;
-  music.setVolume(0.33);
-
 
   // Get the size of the canvas
   const width = this.game.config.width;
